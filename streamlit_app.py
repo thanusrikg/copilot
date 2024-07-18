@@ -1,25 +1,23 @@
 import streamlit as st
-import requests
+from transformers import pipeline
 
-# Define the API endpoint URL
-API_URL = 'https://jsonplaceholder.typicode.com/posts/1'
+# Load sentiment analysis model
+sentiment_analysis = pipeline("sentiment-analysis")
 
-# Streamlit app
 def main():
-    st.title('Simple Streamlit App with API Integration')
+    st.title("AI Co-Pilot: Sentiment Analysis")
 
-    # Fetch data from API
-    response = requests.get(API_URL)
+    # Input text box for user input
+    text = st.text_area("Enter text for sentiment analysis:", "")
 
-    if response.status_code == 200:
-        data = response.json()
+    if st.button("Analyze"):
+        # Perform sentiment analysis
+        result = sentiment_analysis(text)
+        
+        # Display results
+        st.write(f"Text: {text}")
+        st.write(f"Sentiment: {result[0]['label']}")
+        st.write(f"Confidence: {result[0]['score']}")
 
-        # Display data
-        st.write('Post ID:', data['id'])
-        st.write('Title:', data['title'])
-        st.write('Body:', data['body'])
-    else:
-        st.write('Error fetching data from API.')
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
